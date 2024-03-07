@@ -49,8 +49,12 @@
 ****************************************************************************/
 
 #include "serialportreader.h"
-
 #include <QCoreApplication>
+#include <QDebug>
+#include <QtEndian>
+
+#define ENTETE "0x55AA55AA"
+
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -59,17 +63,42 @@ SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
 {
     connect(m_serialPort, &QSerialPort::readyRead, this, &SerialPortReader::handleReadyRead);
     connect(m_serialPort, &QSerialPort::errorOccurred, this, &SerialPortReader::handleError);
-    connect(&m_timer, &QTimer::timeout, this, &SerialPortReader::handleTimeout);
-
-    m_timer.start(5000);
 }
 
 void SerialPortReader::handleReadyRead()
 {
+//    m_readData.append(m_serialPort->readAll());
+
+    static int position = 0;
+
+    // Store in buffer
     m_readData.append(m_serialPort->readAll());
 
-    if (!m_timer.isActive())
-        m_timer.start(5000);
+    int size = 0;
+    // read size of buffer
+    size = m_readData.size();
+
+    if(size > 0)
+    {
+        position += size;
+        switch (position) {
+        case 4:
+            if(m_readData.compare(ENTETE, )
+
+            break;
+        default:
+            break;
+        }
+    }
+
+    // check for stream header
+
+
+    // Sort sections
+
+    qDebug() << m_readData.toHex();
+
+
 }
 
 void SerialPortReader::handleTimeout()
