@@ -53,8 +53,9 @@
 #include <QDebug>
 #include <QtEndian>
 
-#define ENTETE "0x55AA55AA"
+#define ENTETE "aa55aa55" //header in hex little endian
 
+QByteArray entete;
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -63,37 +64,24 @@ SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
 {
     connect(m_serialPort, &QSerialPort::readyRead, this, &SerialPortReader::handleReadyRead);
     connect(m_serialPort, &QSerialPort::errorOccurred, this, &SerialPortReader::handleError);
+
+    // Convert integer to QByteArray
+    entete = QByteArray::fromHex(ENTETE);
 }
 
 void SerialPortReader::handleReadyRead()
 {
-//    m_readData.append(m_serialPort->readAll());
-
-    static int position = 0;
-
     // Store in buffer
     m_readData.append(m_serialPort->readAll());
 
     int size = 0;
-    // read size of buffer
-    size = m_readData.size();
+    int index = -1;
 
-    if(size > 0)
+    if(m_readData.contains(entete)) // si entete présense dans le buffeur
     {
-        position += size;
-        switch (position) {
-        case 4:
-            if(m_readData.compare(ENTETE, )
-
-            break;
-        default:
-            break;
-        }
+        index = m_readData.indexOf(entete); // trouve son indexe
+        m_readData.remove(0,index+4); // reset buffeur en début de tramme après l'index
     }
-
-    // check for stream header
-
-
     // Sort sections
 
     qDebug() << m_readData.toHex();
