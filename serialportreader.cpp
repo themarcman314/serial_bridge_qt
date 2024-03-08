@@ -52,8 +52,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QtEndian>
+#include <iostream>
 
 #define ENTETE "aa55aa55" //header in hex little endian
+#define TAILLE_TRAMME 24
 
 QByteArray entete;
 
@@ -74,7 +76,6 @@ void SerialPortReader::handleReadyRead()
     // Store in buffer
     m_readData.append(m_serialPort->readAll());
 
-    int size = 0;
     int index = -1;
 
     if(m_readData.contains(entete)) // si entete présense dans le buffeur
@@ -82,11 +83,24 @@ void SerialPortReader::handleReadyRead()
         index = m_readData.indexOf(entete); // trouve son indexe
         m_readData.remove(0,index+4); // reset buffeur en début de tramme après l'index
     }
+
+    char frame_counter[4];
+    char node_id;
+    char len;
+    char frame_type;
+    char data;
+
+    char timestamp;
+    char node_id_second;
+
     // Sort sections
+    frame_counter = std::memcpy // m_readData.constData();
+
+
+    // Change endianness
+    // qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
 
     qDebug() << m_readData.toHex();
-
-
 }
 
 void SerialPortReader::handleTimeout()
