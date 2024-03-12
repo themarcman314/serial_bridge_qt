@@ -1,34 +1,24 @@
 #ifndef TRAMME_H
 #define TRAMME_H
 
-#include <QCoreApplication>
+#include <iostream>
 
-
-class tramme
+struct InitVector
 {
-public:
-    tramme(struct data);
-
-
-private:
-    struct init_vector
-    {
-        qint16 timestamp;
-        qint16 node_id;
-    };
-    struct payload
-    {
-        qint16 frame_counter;
-        qint16 node_id;
-        qint16 len;
-        qint16 frame_type;
-        qint16 data;
-    };
-    struct data
-    {
-        struct init_vector;
-        struct payload;
-    };
+    string timestamp;
+    string node_id;
 };
-
+struct Payload
+{
+    string frame_counter;
+    string node_id;
+    string len;
+    string frame_type;
+    string data;
+};
+struct Tramme
+{
+    struct InitVector InitVector;
+    struct Payload Payload;
+};
 #endif // TRAMME_H

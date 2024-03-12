@@ -54,6 +54,7 @@
 #include <QSerialPort>
 #include <QStringList>
 #include <QTextStream>
+#include <QtEndian>
 
 int main(int argc, char *argv[])
 {
