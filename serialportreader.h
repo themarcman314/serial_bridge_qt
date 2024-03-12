@@ -77,6 +77,7 @@ private:
     QByteArray m_readData;
     QTextStream m_standardOutput;
     QTimer m_timer;
+    QByteArray entete;
 };
 
 #endif // SERIALPORTREADER_H

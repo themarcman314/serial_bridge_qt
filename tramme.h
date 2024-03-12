@@ -1,20 +1,32 @@
 #ifndef TRAMME_H
 #define TRAMME_H
 
-#include <iostream>
+#include <QByteArray>
 
 struct InitVector
 {
-    string timestamp;
-    string node_id;
+    QByteArray timestamp;
+    qint32 intTimestamp;
+
+    QByteArray node_id;
+    qint32 intNode_id;
 };
 struct Payload
 {
-    string frame_counter;
-    string node_id;
-    string len;
-    string frame_type;
-    string data;
+    QByteArray frame_counter;
+    qint32 intFrame_counter;
+
+    QByteArray node_id;
+    qint32 intNode_id;
+
+    QByteArray len;
+    qint32 intLen;
+
+    QByteArray frame_type;
+    qint32 intFrame_type;
+
+    QByteArray data;
+    qint32 intData;
 };
 struct Tramme
 {

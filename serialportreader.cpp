@@ -49,15 +49,15 @@
 ****************************************************************************/
 
 #include "serialportreader.h"
+#include "tramme.h"
 #include <QCoreApplication>
 #include <QDebug>
-#include <QtEndian>
 #include <cstring>
 
 #define ENTETE "aa55aa55" //header in hex little endian
 #define TAILLE_TRAMME 24
 
-QByteArray entete;
+void Parse(QByteArray *dataIn, struct Tramme *pTramme);
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -78,22 +78,30 @@ void SerialPortReader::handleReadyRead()
 
     int index = -1;
 
-    if(m_readData.contains(entete)) // si entete présense dans le buffeur
+    qDebug() << m_readData.toHex();
+
+    if(m_readData.contains(entete) && m_readData.size()>entete.size()) // si entete présense dans le buffeur
     {
         index = m_readData.indexOf(entete); // trouve son indexe
-        m_readData.remove(0,index+4); // reset buffeur en début de tramme après l'index
+        m_readData.remove(0,index+4); // enleve en-tete
+        qDebug() << "sans en-tete" << m_readData.toHex();
+        if(m_readData.size() > TAILLE_TRAMME)
+        {
+            qDebug() << "tramme entiere :" << m_readData.toHex();
+            struct Tramme tramme;
+
+            Parse(&m_readData, &tramme);
+
+            // Sort sections
+            //frame_counter = std::memcpy(m_readData, timestamp, 4)
+
+
+            // Change endianness
+            // qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
+        }
     }
 
 
-
-    // Sort sections
-    //frame_counter = std::memcpy(m_readData, timestamp, 4)
-
-
-    // Change endianness
-    // qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
-
-    qDebug() << m_readData.toHex();
 }
 void SerialPortReader::handleTimeout()
 {
