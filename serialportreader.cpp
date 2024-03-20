@@ -49,15 +49,17 @@
 ****************************************************************************/
 
 #include "serialportreader.h"
+#include "tramme.h"
 #include <QCoreApplication>
 #include <QDebug>
-#include <QtEndian>
 #include <cstring>
 
 #define ENTETE "aa55aa55" //header in hex little endian
 #define TAILLE_TRAMME 24
 
+
  QByteArray entete;
+
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -82,25 +84,22 @@ void SerialPortReader::handleReadyRead()
 
     int index = -1;
 
+
     if(m_readData.contains(entete)) // if header
     {
         index = m_readData.indexOf(entete); // find index
         m_readData.remove(0,index); // remove header
     }
 
-   // if(m_readData.contains()
 
-
+            // Sort sections
+            //frame_counter = std::memcpy(m_readData, timestamp, 4)
 
     qDebug() << m_readData.toHex();
 
     // Sort sections
     //frame_counter = std::memcpy(m_readData, timestamp, 4)
 
-
-    // Change endianness
-    //qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
-    //m_readData.clear();
 }
 void SerialPortReader::handleTimeout()
 {
