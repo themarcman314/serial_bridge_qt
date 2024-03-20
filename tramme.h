@@ -5,6 +5,9 @@
 
 struct InitVector
 {
+    QByteArray header;
+    qint32 intHeader;
+
     QByteArray timestamp;
     qint32 intTimestamp;
 

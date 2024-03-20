@@ -57,6 +57,7 @@
 #define ENTETE "aa55aa55" //header in hex little endian
 #define TAILLE_TRAMME 24
 
+void Parse(QByteArray *dataIn, struct Tramme *pTramme);
 
  QByteArray entete;
 
@@ -80,10 +81,8 @@ void SerialPortReader::handleReadyRead()
 {
     // Store in buffer
     m_readData.append(m_serialPort->readAll());
-    qDebug() << m_readData.toHex();
 
     int index = -1;
-
 
     if(m_readData.contains(entete)) // if header
     {
@@ -91,14 +90,12 @@ void SerialPortReader::handleReadyRead()
         m_readData.remove(0,index); // remove header
     }
 
-
-            // Sort sections
-            //frame_counter = std::memcpy(m_readData, timestamp, 4)
-
     qDebug() << m_readData.toHex();
 
     // Sort sections
-    //frame_counter = std::memcpy(m_readData, timestamp, 4)
+    struct Tramme tramme;
+    Parse(&m_readData, &tramme);
+
 
 }
 void SerialPortReader::handleTimeout()
