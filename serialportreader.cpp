@@ -57,7 +57,7 @@
 #define ENTETE "aa55aa55" //header in hex little endian
 #define TAILLE_TRAMME 24
 
-QByteArray entete;
+ QByteArray entete;
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -67,6 +67,9 @@ SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     connect(m_serialPort, &QSerialPort::readyRead, this, &SerialPortReader::handleReadyRead);
     connect(m_serialPort, &QSerialPort::errorOccurred, this, &SerialPortReader::handleError);
 
+    if(m_serialPort->clear() == true)
+        qDebug() << "Cleared buffer";
+
     // Convert integer to QByteArray
     entete = QByteArray::fromHex(ENTETE);
 }
@@ -75,25 +78,29 @@ void SerialPortReader::handleReadyRead()
 {
     // Store in buffer
     m_readData.append(m_serialPort->readAll());
+    qDebug() << m_readData.toHex();
 
     int index = -1;
 
-    if(m_readData.contains(entete)) // si entete présense dans le buffeur
+    if(m_readData.contains(entete)) // if header
     {
-        index = m_readData.indexOf(entete); // trouve son indexe
-        m_readData.remove(0,index+4); // reset buffeur en début de tramme après l'index
+        index = m_readData.indexOf(entete); // find index
+        m_readData.remove(0,index); // remove header
     }
 
+   // if(m_readData.contains()
 
+
+
+    qDebug() << m_readData.toHex();
 
     // Sort sections
     //frame_counter = std::memcpy(m_readData, timestamp, 4)
 
 
     // Change endianness
-    // qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
-
-    qDebug() << m_readData.toHex();
+    //qFromBigEndian<qint16>(, TAILLE_TRAMME, good_endianness);
+    //m_readData.clear();
 }
 void SerialPortReader::handleTimeout()
 {
