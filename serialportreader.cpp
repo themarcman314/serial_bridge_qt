@@ -59,6 +59,7 @@
 #define TAILLE_TRAMME 28
 
 void Parse(QByteArray *dataIn, struct Tramme *pTramme);
+void InitDb(void);
 
 QByteArray entete;
 
@@ -108,6 +109,7 @@ void SerialPortReader::handleReadyRead()
         qDebug() << m_readData.toHex();
 
         m_readData.remove(0, TAILLE_TRAMME);
+        InitDb();
     }
 }
 void SerialPortReader::handleTimeout()
