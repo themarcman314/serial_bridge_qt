@@ -29,7 +29,7 @@ struct Payload
     qint32 intFrame_type;
 
     QByteArray data;
-    qint32 intData;
+    qint64 intData;
 };
 struct Tramme
 {

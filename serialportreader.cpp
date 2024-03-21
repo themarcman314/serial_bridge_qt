@@ -53,9 +53,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <cstring>
+#include <iostream>
 
 #define ENTETE "aa55aa55" //header in hex little endian
-#define TAILLE_TRAMME 24
+#define TAILLE_TRAMME 28
 
 void Parse(QByteArray *dataIn, struct Tramme *pTramme);
 
@@ -90,13 +91,28 @@ void SerialPortReader::handleReadyRead()
         m_readData.remove(0,index); // remove header
     }
 
-    qDebug() << m_readData.toHex();
+    //qDebug() << m_readData.toHex();
 
     // Sort sections
     struct Tramme tramme;
     Parse(&m_readData, &tramme);
 
+    if(m_readData.length() > TAILLE_TRAMME)
+    {
+        std::cout << "new header : " << std::hex << tramme.InitVector.intHeader << std::endl;
+        std::cout << "new timestamp : " << std::dec << tramme.InitVector.intTimestamp << std::endl;
+        std::cout << "new node_id : " << std::hex << tramme.InitVector.intNode_id << std::endl;
 
+        std::cout << "new frame_counter : " << std::hex << tramme.Payload.intFrame_counter << std::endl;
+        std::cout << "new node_id : " << std::hex << tramme.Payload.intNode_id << std::endl;
+        std::cout << "new length : " << std::hex << tramme.Payload.intLen << std::endl;
+        std::cout << "new frame_type : " << std::hex << tramme.Payload.intFrame_type << std::endl;
+        std::cout << "new data : " << std::hex << tramme.Payload.intData << std::endl;
+
+        qDebug() << m_readData.toHex();
+
+        m_readData.remove(0, TAILLE_TRAMME);
+    }
 }
 void SerialPortReader::handleTimeout()
 {
