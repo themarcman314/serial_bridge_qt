@@ -60,8 +60,7 @@
 
 void Parse(QByteArray *dataIn, struct Tramme *pTramme);
 
- QByteArray entete;
-
+QByteArray entete;
 
 SerialPortReader::SerialPortReader(QSerialPort *serialPort, QObject *parent) :
     QObject(parent),
@@ -91,9 +90,6 @@ void SerialPortReader::handleReadyRead()
         m_readData.remove(0,index); // remove header
     }
 
-    //qDebug() << m_readData.toHex();
-
-    // Sort sections
     struct Tramme tramme;
     Parse(&m_readData, &tramme);
 
