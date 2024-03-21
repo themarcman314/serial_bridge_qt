@@ -1,5 +1,6 @@
 QT = core
 QT += serialport
+QT += sql
 
 CONFIG += console
 CONFIG -= app_bundle
@@ -12,6 +13,7 @@ HEADERS += \
     tramme.h
 
 SOURCES += \
+    db.cpp \
     main.cpp \
     serialportreader.cpp \
     structure.cpp
